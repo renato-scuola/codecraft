@@ -1,0 +1,309 @@
+body {
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes expandFullscreen {
+  from {
+    transform: scale(0.9);
+    opacity: 0.5;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Loading animation styles */
+.loading-pulse {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.loading-message {
+  animation: fadeInScale 0.5s ease-out;
+}
+
+/* Fullscreen transitions */
+.fullscreen-enter {
+  animation: expandFullscreen 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fullscreen-exit {
+  animation: expandFullscreen 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) reverse;
+}
+
+/* Stylized scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 20px;
+  border: transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(155, 155, 155, 0.8);
+}
+
+/* Custom scrollbar for the code editor */
+.monaco-editor ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.monaco-editor ::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 20px;
+}
+
+.monaco-editor ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(155, 155, 155, 0.8);
+}
+
+/* Iframe styles */
+iframe {
+  transform-origin: center top;
+  transition: transform 0.3s ease-out;
+  backface-visibility: hidden;
+}
+
+/* Action buttons */
+.action-button {
+  transition: transform 0.2s ease;
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Generated site fullscreen mode */
+.generated-site-fullscreen {
+  width: 100%;
+  height: 100vh;
+  border-radius: 0;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Fix for iframe dark background issues */
+.generated-site-container {
+  background-color: #ffffff !important;
+}
+
+.generated-site-iframe {
+  background-color: #ffffff !important;
+}
+
+/* Dialog background fixes */
+.MuiDialog-paper {
+  background-color: var(--mui-palette-background-paper) !important;
+}
+
+/* Ensure proper iframe rendering */
+iframe {
+  display: block !important;
+}
+
+@media (max-width: 600px) {
+  .dialog-fullscreen {
+    padding: 0 !important;
+  }
+  
+  .dialog-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  /* Rendere il container del CodeGenerationDialog più piccolo su mobile */
+  .MuiDialog-paper {
+    width: 92% !important;
+    max-width: 92% !important;
+    margin: 0 auto !important;
+    min-height: auto !important;
+    max-height: 85vh !important;
+  }
+  
+  /* Centrare meglio l'icona di caricamento su mobile */
+  .loading-progress {
+    margin: 1rem auto !important;
+    height: 100px !important;
+    width: 100px !important;
+  }
+  
+  .loading-progress .MuiSvgIcon-root {
+    font-size: 2rem !important;
+  }
+  
+  /* Assicurare che l'iframe occupi il 100% dello schermo in modalità fullscreen mobile */
+  .MuiDialog-paper.MuiDialog-paperFullScreen {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Correzioni per l'iframe con contenuto generato */
+  .generated-site-iframe {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .generated-site-container {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* Rendere il contenuto del dialog più compatto */
+  .MuiDialogContent-root {
+    padding: 6px !important;
+  }
+  
+  /* Ridurre lo spazio del titolo */
+  .MuiDialogTitle-root {
+    padding: 8px 12px !important;
+  }
+  
+  /* Spostare i pulsanti nella dialog un po' più a sinistra su mobile */
+  .MuiDialogTitle-root .MuiBox-root:last-child {
+    margin-right: 12px;
+  }
+  
+  /* Ridurre lo spazio tra i pulsanti su mobile */
+  .MuiDialogTitle-root .MuiIconButton-root {
+    margin-left: 4px !important;
+  }
+  
+  /* Ridurre dimensione del testo nel progresso */
+  .progress-message {
+    font-size: 1rem !important;
+    padding: 12px !important;
+  }
+  
+  /* Ridurre dimensione dell'icona di caricamento e posizionarla */
+  .loading-progress .MuiCircularProgress-root {
+    width: 70px !important;
+    height: 70px !important;
+  }
+  
+  /* Posizionamento corretto dell'animazione di caricamento */
+  .loading-progress {
+    position: relative;
+    margin: 0 auto;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Fluid typography */
+@media screen and (max-width: 600px) {
+  h1 {
+    font-size: 1.8rem !important;
+  }
+  h3 {
+    font-size: 1.5rem !important;
+  }
+  h6 {
+    font-size: 1rem !important;
+  }
+}
+
+/* Dialog centered */
+.MuiDialog-container .MuiDialog-paper {
+  margin: auto !important;
+}
+
+/* Make the backdrop darker to improve contrast */
+.MuiBackdrop-root {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(3px);
+}
