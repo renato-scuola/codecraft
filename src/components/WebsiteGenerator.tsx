@@ -12,8 +12,24 @@ export const WebsiteGenerator: React.FC<WebsiteGeneratorProps> = ({ onWebsiteGen
   const [selectedStyle, setSelectedStyle] = useState('no-css');
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState('');
+  const [apiKey, setApiKey] = useState('');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const generateButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Load API key from localStorage on mount
+  useEffect(() => {
+    const savedApiKey = localStorage.getItem('openrouter-api-key');
+    if (savedApiKey) {
+      setApiKey(savedApiKey);
+    }
+  }, []);
+
+  // Save API key to localStorage when it changes
+  useEffect(() => {
+    if (apiKey) {
+      localStorage.setItem('openrouter-api-key', apiKey);
+    }
+  }, [apiKey]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -34,7 +50,18 @@ export const WebsiteGenerator: React.FC<WebsiteGeneratorProps> = ({ onWebsiteGen
   }, []);
 
   const handleGenerate = async () => {
-    if (!prompt.trim()) return;
+    if (!prompt.trim()) {
+      alert('Please describe your website');
+      return;
+    }
+
+    // Get API key from user input or environment
+    const effectiveApiKey = apiKey || process.env.NEXT_PUBLIC_OPENROUTER_API_KEY;
+    
+    if (!effectiveApiKey) {
+      alert('Please provide an OpenRouter API key to generate websites');
+      return;
+    }
 
     setIsGenerating(true);
     setProgress('Starting generation...');
@@ -72,7 +99,7 @@ Generate the website now:`;
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENROUTER_API_KEY}`,
+          'Authorization': `Bearer ${effectiveApiKey}`,
           'HTTP-Referer': window.location.origin,
           'X-Title': 'CodeCraft AI'
         },
@@ -165,6 +192,28 @@ Generate the website now:`;
             className="glass-input w-full h-32 rounded-2xl px-6 py-4 text-white text-base placeholder-gray-400 resize-none"
             disabled={isGenerating}
           />
+        </div>
+
+        {/* API Key input */}
+        <div className="space-y-4">
+          <label className="block text-white/90 text-sm font-medium">
+            OpenRouter API Key
+            <span className="text-gray-400 text-xs ml-2">(Required for GitHub Pages deployment)</span>
+          </label>
+          <input
+            type="password"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+            placeholder="sk-or-v1-... (Get yours from openrouter.ai)"
+            className="glass-input w-full rounded-2xl px-6 py-4 text-white text-base placeholder-gray-400"
+            disabled={isGenerating}
+          />
+          <p className="text-gray-400 text-xs">
+            Your API key is stored locally and never sent to our servers. 
+            <a href="https://openrouter.ai" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 ml-1">
+              Get your free API key here
+            </a>
+          </p>
         </div>
 
         {/* Style selection */}
