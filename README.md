@@ -1,22 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CodeCraft AI
 
-## Getting Started
+A Next.js TypeScript application that generates complete HTML websites using AI. Features a beautiful macOS 26 liquid glass UI and integrates with OpenRouter's DeepSeek API.
 
-First, run the development server:
+## Features
 
+- 🎨 **macOS 26 Liquid Glass UI** - Modern, translucent interface design
+- 🤖 **AI-Powered Generation** - Uses OpenRouter's DeepSeek Chat V3 model
+- 🎯 **Multiple Style Options** - No CSS, Simple Style, Crazy Style
+- 📊 **Real-time Progress** - Shows generation progress with status updates
+- 🖥️ **Fullscreen Preview** - Generated websites display in fullscreen with toolbar
+- 💾 **Download HTML** - Save generated websites as HTML files
+
+## Setup
+
+1. **Install dependencies:**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Configure OpenRouter API:**
+   - Get your API key from [OpenRouter](https://openrouter.ai)
+   - Update `.env.local` with your API key:
+   ```
+   OPENROUTER_API_KEY=your_actual_api_key_here
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Run the development server:**
+```bash
+npm run dev
+```
+
+4. **Open [http://localhost:3000](http://localhost:3000)** in your browser
+
+## Usage
+
+1. **Describe your website** in the text area
+2. **Choose a style** (No CSS, Simple Style, or Crazy Style)
+3. **Click "Generate Website"** to start the AI generation
+4. **Preview** the generated website in fullscreen
+5. **Download** the HTML file or close the preview
+
+## Technology Stack
+
+- **Next.js 14+** with App Router
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling
+- **OpenRouter API** for AI generation
+- **DeepSeek Chat V3** model
+
+## API Integration
+
+The app uses OpenRouter's API to access the `deepseek/deepseek-chat-v3-0324:free` model. The API route is located at `/api/generate` and handles:
+
+- Prompt processing
+- API authentication
+- Response parsing
+- Error handling with fallback HTML
+
+## Development
+
+To modify the application:
+
+- **Main page**: `src/app/page.tsx`
+- **Website generator**: `src/components/WebsiteGenerator.tsx`
+- **Preview component**: `src/components/WebsitePreview.tsx`
+- **API route**: `src/app/api/generate/route.ts`
+- **API client**: `src/lib/api.ts`
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
