@@ -28,7 +28,6 @@ jobs:
       env:
         OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         NODE_ENV: production
-        GITHUB_ACTIONS: true
 
     - name: Add .nojekyll file
       run: touch ./out/.nojekyll
