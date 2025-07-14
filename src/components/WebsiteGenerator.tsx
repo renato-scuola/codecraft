@@ -67,55 +67,63 @@ Generate the website now:`;
 
       setProgress('Connecting to AI...');
 
-      // Call the API with progress tracking
-      const response = await fetch('/api/generate', {
+      // Call OpenRouter directly for GitHub Pages compatibility
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENROUTER_API_KEY}`,
+          'HTTP-Referer': window.location.origin,
+          'X-Title': 'CodeCraft AI'
         },
-        body: JSON.stringify({ prompt: fullPrompt }),
+        body: JSON.stringify({
+          model: 'deepseek/deepseek-chat-v3-0324:free',
+          messages: [
+            {
+              role: 'user',
+              content: fullPrompt
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 4000,
+          stream: false
+        }),
       });
 
       if (!response.ok) {
         throw new Error('Failed to generate website');
       }
 
-      const reader = response.body?.getReader();
-      if (!reader) {
-        throw new Error('No response body');
-      }
+      setProgress('Processing response...');
 
-      let html = '';
-      const decoder = new TextDecoder();
-
-      setProgress('Receiving response...');
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        html += chunk;
-
-        // Track progress based on content
-        if (html.includes('<!DOCTYPE') || html.includes('<html')) {
-          setProgress('Generating HTML structure...');
-        }
-        if (html.includes('<style') || html.includes('css')) {
-          setProgress('Generating CSS styles...');
-        }
-        if (html.includes('<script') || html.includes('javascript')) {
-          setProgress('Generating JavaScript...');
-        }
-      }
-
-      // Parse the JSON response
-      const data = JSON.parse(html);
+      const data = await response.json();
+      const rawResponse = data.choices[0].message.content;
       
-      if (data.html) {
+      // Extract HTML content
+      let html = rawResponse;
+      
+      // Find the start of HTML content
+      const htmlStart = rawResponse.indexOf('<!DOCTYPE html>') !== -1 
+        ? rawResponse.indexOf('<!DOCTYPE html>')
+        : rawResponse.indexOf('<html');
+      
+      if (htmlStart !== -1) {
+        html = rawResponse.substring(htmlStart);
+        
+        // Find the end of HTML content
+        const htmlEnd = html.lastIndexOf('</html>');
+        if (htmlEnd !== -1) {
+          html = html.substring(0, htmlEnd + 7); // +7 for '</html>'
+        }
+      }
+      
+      // Clean up any remaining non-HTML text
+      html = html.trim();
+      
+      if (html) {
         setProgress('Finalizing website...');
         await new Promise(resolve => setTimeout(resolve, 500)); // Brief delay for UX
-        onWebsiteGenerated(data.html);
+        onWebsiteGenerated(html);
         setPrompt('');
       } else {
         throw new Error('No HTML content received');
