@@ -1,17 +1,15 @@
 import type { NextConfig } from "next";
 
-// Funziona solo quando deployato su GitHub Pages, non in locale
+// GitHub Pages configuration - force fresh deployment
 const nextConfig: NextConfig = {
   output: 'export',
   trailingSlash: true,
   images: {
     unoptimized: true
   },
-  // Solo per GitHub Pages
-  ...(process.env.GITHUB_ACTIONS && {
-    basePath: '/codecraft',
-    assetPrefix: '/codecraft/',
-  }),
+  // Always use basePath for GitHub Pages
+  basePath: '/codecraft',
+  assetPrefix: '/codecraft/',
   distDir: 'out',
 };
 

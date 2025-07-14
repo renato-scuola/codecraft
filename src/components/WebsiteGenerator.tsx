@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 
+// Deployment refresh: 2025-07-14 20:15 UTC
 interface WebsiteGeneratorProps {
   onWebsiteGenerated: (html: string) => void;
 }
