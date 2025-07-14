@@ -30,6 +30,9 @@ jobs:
         NODE_ENV: production
         GITHUB_ACTIONS: true
 
+    - name: Add .nojekyll file
+      run: touch ./out/.nojekyll
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
       with:
