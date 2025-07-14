@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { generateWebsite } from '@/lib/api';
 
 interface WebsiteGeneratorProps {
   onWebsiteGenerated: (html: string) => void;

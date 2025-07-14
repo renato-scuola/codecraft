@@ -123,11 +123,11 @@ Generate the updated website code:`;
                 }, 600);
                 return; // Esci dal loop
               }
-            } catch (e) {
+            } catch (_e) {
               // Chunk non completo, continua
             }
           }
-        } catch (e) {
+        } catch (_e) {
           // Fallback: prova il metodo originale se il nuovo formato fallisce
           if (fullResponse.includes('{"html"')) {
             try {
@@ -144,7 +144,7 @@ Generate the updated website code:`;
                 }, 600);
                 return;
               }
-            } catch (parseError) {
+            } catch (_parseError) {
               // Continua se non riesce a parsare
             }
           }
