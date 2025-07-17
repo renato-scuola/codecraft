@@ -86,7 +86,7 @@ Generate the website now:`;
           ],
           temperature: 0.7,
           max_tokens: 4000,
-          stream: false
+          stream: true
         }),
       });
 
@@ -94,21 +94,88 @@ Generate the website now:`;
         throw new Error('Failed to generate website');
       }
 
-      setProgress('Processing response...');
+      setProgress('Analyzing requirements...');
 
-      const data = await response.json();
-      const rawResponse = data.choices[0].message.content;
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('No response stream available');
+      }
+
+      let fullResponse = '';
+      let hasHtmlStarted = false;
+      let hasCssStarted = false;
+      let hasJsStarted = false;
+
+      const decoder = new TextDecoder();
       
-      // Extract HTML content
-      let html = rawResponse;
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (done) break;
+        
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n');
+        
+        for (const line of lines) {
+          if (line.trim() === '' || line.trim() === 'data: [DONE]') continue;
+          
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) {
+                const content = data.choices[0].delta.content;
+                fullResponse += content;
+                
+                // Progressive feedback based on content
+                if (!hasHtmlStarted && (content.includes('<!DOCTYPE') || content.includes('<html') || fullResponse.includes('<!DOCTYPE'))) {
+                  hasHtmlStarted = true;
+                  setProgress('🏗️ Building HTML structure...');
+                }
+                
+                if (!hasCssStarted && hasHtmlStarted && (content.includes('<style') || content.includes('CSS') || fullResponse.includes('<style'))) {
+                  hasCssStarted = true;
+                  setProgress('🎨 Styling with CSS...');
+                }
+                
+                if (!hasJsStarted && hasCssStarted && (content.includes('<script') || content.includes('JavaScript') || fullResponse.includes('<script'))) {
+                  hasJsStarted = true;
+                  setProgress('⚡ Adding JavaScript functionality...');
+                }
+                
+                // Generic progress updates
+                if (fullResponse.length > 500 && !hasHtmlStarted) {
+                  setProgress('📝 Generating content...');
+                }
+                if (fullResponse.length > 1500 && hasHtmlStarted && !hasCssStarted) {
+                  setProgress('🏗️ Structuring components...');
+                }
+                if (fullResponse.length > 3000 && hasCssStarted && !hasJsStarted) {
+                  setProgress('✨ Finalizing styles...');
+                }
+                if (fullResponse.length > 4000) {
+                  setProgress('🚀 Completing website...');
+                }
+              }
+            } catch (e) {
+              // Skip invalid JSON lines
+            }
+          }
+        }
+      }
+
+      setProgress('Processing final result...');
+      setProgress('Processing final result...');
+      
+      // Extract HTML content from the full response
+      let html = fullResponse;
       
       // Find the start of HTML content
-      const htmlStart = rawResponse.indexOf('<!DOCTYPE html>') !== -1 
-        ? rawResponse.indexOf('<!DOCTYPE html>')
-        : rawResponse.indexOf('<html');
+      const htmlStart = fullResponse.indexOf('<!DOCTYPE html>') !== -1 
+        ? fullResponse.indexOf('<!DOCTYPE html>')
+        : fullResponse.indexOf('<html');
       
       if (htmlStart !== -1) {
-        html = rawResponse.substring(htmlStart);
+        html = fullResponse.substring(htmlStart);
         
         // Find the end of HTML content
         const htmlEnd = html.lastIndexOf('</html>');
