@@ -129,31 +129,31 @@ Generate the website now:`;
                 // Progressive feedback based on content
                 if (!hasHtmlStarted && (content.includes('<!DOCTYPE') || content.includes('<html') || fullResponse.includes('<!DOCTYPE'))) {
                   hasHtmlStarted = true;
-                  setProgress('🏗️ Building HTML structure...');
+                  setProgress('Building HTML structure...');
                 }
                 
                 if (!hasCssStarted && hasHtmlStarted && (content.includes('<style') || content.includes('CSS') || fullResponse.includes('<style'))) {
                   hasCssStarted = true;
-                  setProgress('🎨 Styling with CSS...');
+                  setProgress('Styling with CSS...');
                 }
                 
                 if (!hasJsStarted && hasCssStarted && (content.includes('<script') || content.includes('JavaScript') || fullResponse.includes('<script'))) {
                   hasJsStarted = true;
-                  setProgress('⚡ Adding JavaScript functionality...');
+                  setProgress('Adding JavaScript functionality...');
                 }
                 
                 // Generic progress updates
                 if (fullResponse.length > 500 && !hasHtmlStarted) {
-                  setProgress('📝 Generating content...');
+                  setProgress('Generating content...');
                 }
                 if (fullResponse.length > 1500 && hasHtmlStarted && !hasCssStarted) {
-                  setProgress('🏗️ Structuring components...');
+                  setProgress('Structuring components...');
                 }
                 if (fullResponse.length > 3000 && hasCssStarted && !hasJsStarted) {
-                  setProgress('✨ Finalizing styles...');
+                  setProgress('Finalizing styles...');
                 }
                 if (fullResponse.length > 4000) {
-                  setProgress('🚀 Completing website...');
+                  setProgress('Completing website...');
                 }
               }
             } catch (e) {

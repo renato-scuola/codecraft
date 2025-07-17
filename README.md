@@ -50,7 +50,7 @@ npm run dev
 
 ## API Integration
 
-The app uses OpenRouter's API to access the `deepseek/deepseek-chat-v3-0324:free` model. The API route is located at `/api/generate` and handles:
+The app uses OpenRouter's API directly from the client-side to access the `deepseek/deepseek-chat-v3-0324:free` model. All API calls are made directly from the React components to ensure compatibility with static hosting platforms like GitHub Pages.
 
 - Prompt processing
 - API authentication
@@ -62,10 +62,11 @@ The app uses OpenRouter's API to access the `deepseek/deepseek-chat-v3-0324:free
 To modify the application:
 
 - **Main page**: `src/app/page.tsx`
-- **Website generator**: `src/components/WebsiteGenerator.tsx`
-- **Preview component**: `src/components/WebsitePreview.tsx`
-- **API route**: `src/app/api/generate/route.ts`
-- **API client**: `src/lib/api.ts`
+- **Website generator**: `src/components/WebsiteGenerator.tsx` (handles AI generation with streaming)
+- **Preview component**: `src/components/WebsitePreview.tsx` (handles AI editing and preview)
+- **Styles**: `src/app/globals.css` (glassmorphism and animations)
+
+All AI functionality is client-side only, making it compatible with static hosting platforms.
 
 ## License
 
